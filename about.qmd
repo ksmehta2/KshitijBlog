@@ -1,0 +1,21 @@
+---
+title: "About Me"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/kshitijsunilmehta/
+    - icon: github
+      text: Github
+      href: https://github.com/ksmehta2
+---
+
+Hey there! I'm Kshitij Sunil Mehta, a passionate data enthusiast with a knack for storytelling through numbers.
+
+I hail from Mumbai, where I completed my education in Computer Engineering. My journey into the realm of data began during my college years when I discovered the power of statistics and programming in unlocking hidden patterns from raw information.
+
+Beyond data, I enjoy playing soccer and traveling and exploring different countries.
+
+Over the years, I've had the privilege of working on different types of data. From academic accolades to real-world projects, each milestone has fueled my passion for continuous learning and growth in the field of data science.
