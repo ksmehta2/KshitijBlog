@@ -1,0 +1,83 @@
+---
+title: "Healthcare Dataset Analysis"
+author: "Kshitij Sunil Mehta"
+date: "2024-03-15"
+categories: [dataset, code, analysis]
+image: "image.jpg"
+---
+
+In this analysis, we delve into a comprehensive healthcare dataset, exploring patterns in patient demographics, medical conditions, and healthcare costs. This analysis aims to uncover insights that could inform better healthcare management and policy-making.
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+# Load the dataset
+healthcare_data <- read_csv("/Users/kshitijmehta/Desktop/is407/KshitijBlog/data/healthcare_dataset.csv")
+
+# Clean the data by removing rows with any missing information in crucial columns
+healthcare_data <- healthcare_data %>%
+  filter(!is.na(Age) & !is.na(Gender) & Gender != "" & 
+         !is.na(`Medical Condition`) & `Medical Condition` != "" & 
+         !is.na(`Billing Amount`) & `Billing Amount` > 0)
+
+# Display the structure and the first few rows of the dataset
+glimpse(healthcare_data)
+head(healthcare_data)
+```
+
+## **Analysis 1: Age Distribution of Patients**
+
+```{r}
+# Plot the age distribution of the patients
+ggplot(healthcare_data, aes(x=Age)) +
+  geom_histogram(binwidth = 10, fill="blue", color="black") +
+  labs(title="Age Distribution of Patients", x="Age", y="Count") +
+  theme_minimal()
+```
+
+## **Analysis 2: Medical Condition Frequency**
+
+```{r}
+# Summarize medical conditions frequency
+condition_freq <- healthcare_data %>%
+  group_by(`Medical Condition`) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count))
+
+# Plot the frequency of medical conditions
+ggplot(condition_freq, aes(x=reorder(`Medical Condition`, Count), y=Count)) +
+  geom_bar(stat="identity", fill="green") +
+  labs(title="Frequency of Medical Conditions", x="Medical Condition", y="Count") +
+  theme_minimal() +
+  coord_flip()
+```
+
+## **Analysis 3: Healthcare Costs Analysis**
+
+```{r}
+# Plot the distribution of billing amounts
+ggplot(healthcare_data, aes(x=`Billing Amount`)) +
+  geom_histogram(binwidth = 5000, fill="purple", color="black") +
+  labs(title="Billing Amount Distribution", x="Billing Amount", y="Count") +
+  theme_minimal()
+```
+
+## **Analysis 4: Admission Type Distribution**
+
+```{r}
+# Summarize admission types
+admission_type_freq <- healthcare_data %>%
+  group_by(`Admission Type`) %>%
+  summarise(Count = n()) %>%
+  arrange(desc(Count))
+
+# Plot the distribution of admission types
+ggplot(admission_type_freq, aes(x=`Admission Type`, y=Count, fill=`Admission Type`)) +
+  geom_bar(stat="identity") +
+  labs(title="Admission Type Distribution", x="Admission Type", y="Count") +
+  theme_minimal()
+```
+
+In this analysis, we explored the healthcare dataset. Key findings include a wide age range among patients with conditions like Asthma,Cancer and Hypertension.These insights are critical for better healthcare management and policy-making.

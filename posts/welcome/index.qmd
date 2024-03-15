@@ -1,0 +1,74 @@
+---
+title: "NYC Traffic Accidents 2020 Analysis"
+author: "Kshitij Sunil Mehta"
+date: "2024-03-12"
+categories: [data science]
+---
+
+In this analysis, we delve into the NYC Traffic Accidents dataset for the year 2020, exploring patterns in accident occurrences, identifying hotspots across the city, and analyzing the most common causes of accidents. This analysis aims to uncover insights that could inform better traffic safety measures.
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+# Load the dataset
+accidents_data <- read_csv("/Users/kshitijmehta/Desktop/is407/KshitijBlog/data/NYC Accidents 2020.csv")
+
+accidents_data$`CRASH DATE` <- as.Date(accidents_data$`CRASH DATE`, "%Y-%m-%d")
+accidents_data <- accidents_data %>%
+  filter(!is.na(BOROUGH) & BOROUGH != "" & `CONTRIBUTING FACTOR VEHICLE 1` != "Unspecified")
+# Display the structure and the first few rows of the dataset
+glimpse(accidents_data)
+head(accidents_data)
+```
+
+## Analysis 1: Frequency of Accidents by Month
+
+```{r}
+accidents_data$Month <- format(accidents_data$`CRASH DATE`, "%m")
+
+# Summarize accidents by month
+monthly_accidents <- accidents_data %>%
+  group_by(Month) %>%
+  summarise(Accidents = n())
+
+# Plot the accidents by month
+ggplot(monthly_accidents, aes(x=Month, y=Accidents)) +
+  geom_bar(stat="identity", fill="blue") +
+  labs(title="Monthly Traffic Accidents in NYC for 2020", x="Month", y="Number of Accidents") +
+  theme_minimal()
+```
+
+## Analysis 2: Geographic Distribution of Accidents
+
+```{r}
+borough_accidents <- accidents_data %>%
+  group_by(BOROUGH) %>%
+  summarise(Accidents = n())
+
+ggplot(borough_accidents, aes(x=reorder(BOROUGH, -Accidents), y=Accidents)) +
+  geom_bar(stat="identity", fill="coral") +
+  labs(title="Traffic Accidents Distribution by Borough in NYC for 2020", x="Borough", y="Number of Accidents") +
+  theme_minimal() +
+  coord_flip()
+
+```
+
+## Analysis 3: Common causes of accident
+
+```{r}
+cause_accidents <- accidents_data %>%
+  group_by(CAUSE = `CONTRIBUTING FACTOR VEHICLE 1`) %>%
+  summarise(Accidents = n()) %>%
+  arrange(desc(Accidents)) %>%
+  top_n(10)
+
+ggplot(cause_accidents, aes(x=reorder(CAUSE, Accidents), y=Accidents)) +
+  geom_bar(stat="identity", fill="lightgreen") +
+  labs(title="Top 10 Causes of Traffic Accidents in NYC for 2020", x="Cause", y="Number of Accidents") +
+  theme_minimal() +
+  coord_flip()
+```
+
+In this analysis, we explored the NYC Traffic Accidents dataset for 2020. Key findings include a peak in accidents during winter months in Brooklyn. The most common causes of accidents were driver inattention or distraction. These insights highlight the importance of targeted traffic safety measures and the need for ongoing analysis to reduce traffic-related fatalities and injuries.
